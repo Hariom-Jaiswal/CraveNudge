@@ -22,9 +22,11 @@ export default function MealLog({ meals }: MealLogProps) {
   return (
     <div className="relative border-l border-border-glass ml-4 pl-6 space-y-8 pb-10">
       {meals.map((meal, index) => {
-        const time = meal.timestamp?.seconds 
-          ? new Date(meal.timestamp.seconds * 1000) 
-          : new Date(meal.timestamp);
+        // Handle multiple timestamp formats (Firestore Timestamp, Date object, or numeric milliseconds)
+        const ts = meal.timestamp;
+        const time = (ts && typeof ts === "object" && "seconds" in ts)
+          ? new Date((ts as any).seconds * 1000)
+          : new Date(ts as any);
         
         return (
           <motion.div 
