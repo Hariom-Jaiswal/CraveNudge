@@ -1,0 +1,31 @@
+# Dependencies (re-installed inside Docker)
+node_modules/
+
+# Build output (generated in Docker)
+.next/
+
+# Local environment files — NEVER bake into the image
+.env
+.env.local
+.env.development
+.env.test
+
+# Dev tooling
+.git/
+.gitignore
+README.md
+WORKFLOW.md
+AGENTS.md
+CLAUDE.md
+
+# Test files
+__tests__/
+jest.config.js
+jest.setup.js
+fix.js
+fix2.js
+
+# Linter / editor config
+.eslintcache
+.DS_Store
+*.log
