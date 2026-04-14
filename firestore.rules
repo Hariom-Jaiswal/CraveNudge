@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── User profiles & sub-collections ─────────────────────────────────
+    // Users can only read/write their own document.
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+
+      // Meals: scoped to the authenticated owner
+      match /meals/{mealId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+
+      // Streak data: scoped to the authenticated owner
+      match /streaks/{docId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+    }
+
+    // ── Nutrition cache ──────────────────────────────────────────────────
+    // Any authenticated user may read cached nutrition data.
+    // Only the server-side Admin SDK may write (enforced by `allow write: if false`).
+    match /nutritionCache/{foodName} {
+      allow read: if request.auth != null;
+      allow write: if false; // written exclusively via Admin SDK in /api/analyze
+    }
+  }
+}
